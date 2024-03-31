@@ -16,7 +16,7 @@ public class LineFollowingThreaded {
         EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
         EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3);
 
-        // Set motor speeds
+        // Set Motor Speeds
         int baseSpeed = 300;
         int searchSpeed = baseSpeed / 2; // Reduced speed for searching
         leftMotor.setSpeed(baseSpeed);
