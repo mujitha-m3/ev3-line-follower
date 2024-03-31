@@ -9,9 +9,10 @@ public class LineFollowingThreaded {
     public static void main(String[] args) {
         // Initialize motors and color sensor
         Brick brick = BrickFinder.getDefault();
-        EV3regulatedmotor leftMotor = new EV3regulatedMotor(MotorPort.A);
-        EV3regulatedMotor rightMotor = new EV3regulatedMotor(MotorPort.B);
-        EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S1);
+        EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
+        EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
+        EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3);
+
 
         // Set Motor Speeds
         int baseSpeed = 300;
