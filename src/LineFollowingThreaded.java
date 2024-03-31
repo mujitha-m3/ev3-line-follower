@@ -46,9 +46,9 @@ public class LineFollowingThreaded {
 }
 
 class ColorSensingThread extends Thread {
-    private EV3colorSensor colorSensor;
-    private EV3largeRegulatedMotor leftMotor;
-    private EV3largeRegulatedMotor rightMotor;
+    private EV3ColorSensor colorSensor;
+    private EV3LargeRegulatedMotor leftMotor;
+    private EV3LargeRegulatedMotor rightMotor;
     private int baseSpeed;
     private int searchSpeed;
     private volatile boolean running;
@@ -62,8 +62,9 @@ class ColorSensingThread extends Thread {
         this.running = true;
     }
 
+
     public void run() {
-        SampleProvider colorProvider = colorSensor.getColorIDMode();
+        SampleProvider colorProvider = ColorSensor.getColorIDMode();
         float[] sample = new float[colorProvider.sampleSize()];
 
         while (running) {
