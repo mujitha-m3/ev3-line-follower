@@ -64,7 +64,7 @@ class ColorSensingThread extends Thread {
 
 
     public void run() {
-        SampleProvider colorProvider = ColorSensor.getColorIDMode();
+        SampleProvider colorProvider = colorSensor.getColorIDMode();
         float[] sample = new float[colorProvider.sampleSize()];
 
         while (running) {
@@ -72,7 +72,7 @@ class ColorSensingThread extends Thread {
             colorProvider.fetchSample(sample, 0);
             int colorId = (int) sample[0];
 
-            if (colorId == 7) {
+            if (colorId = 7) {
                 // Color ID 7: Line detected
                 leftMotor.forward();
                 rightMotor.forward();
