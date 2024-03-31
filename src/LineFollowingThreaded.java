@@ -72,7 +72,7 @@ class ColorSensingThread extends Thread {
             colorProvider.fetchSample(sample, 0);
             int colorId = (int) sample[0];
 
-            if (colorId = 7) {
+            if (colorId == 7) {
                 // Color ID 7: Line detected
                 leftMotor.forward();
                 rightMotor.forward();
@@ -80,13 +80,13 @@ class ColorSensingThread extends Thread {
             } else {
                 // Line missing
                 // Curve handling
-                leftMotor.setSpeed(searchSpeed / 2);
+                leftMotor.setSpeed(searchSpeed / 1);
                 rightMotor.setSpeed(baseSpeed);
                 leftMotor.forward();
                 rightMotor.forward();
                 Delay.msDelay(100); // Adjust time as needed
                 leftMotor.setSpeed(baseSpeed);
-                rightMotor.setSpeed(searchSpeed / 2);
+                rightMotor.setSpeed(searchSpeed / 1);
                 leftMotor.forward();
                 rightMotor.forward();
                 Delay.msDelay(200); // Adjust time as needed
