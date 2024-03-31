@@ -4,6 +4,10 @@ import lejos.hardware.Button;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
+import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.robotics.SampleProvider;
+import lejos.utility.Delay;
+
 
 public class LineFollowingThreaded {
     public static void main(String[] args) {
@@ -22,8 +26,9 @@ public class LineFollowingThreaded {
 
 
         // Start color sensing thread
-        colorSensingThread colorThread = new ColorSensingThread(colorSensor, leftMotor, rightMotor, baseSpeed, searchSpeed);
+        ColorSensingThread colorThread = new ColorSensingThread(colorSensor, leftMotor, rightMotor, baseSpeed, searchSpeed);
         colorThread.start();
+
 
         // Wait for button press to start the program
         System.out.println("Press any button to start...");
@@ -41,9 +46,9 @@ public class LineFollowingThreaded {
 }
 
 class ColorSensingThread extends Thread {
-    private EV3ColorSensor colorSensor;
-    private EV3LargeRegulatedMotor leftMotor;
-    private EV3LargeRegulatedMotor rightMotor;
+    private EV3colorSensor colorSensor;
+    private EV3largeRegulatedMotor leftMotor;
+    private EV3largeRegulatedMotor rightMotor;
     private int baseSpeed;
     private int searchSpeed;
     private volatile boolean running;
