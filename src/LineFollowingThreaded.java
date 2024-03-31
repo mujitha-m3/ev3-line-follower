@@ -22,7 +22,7 @@ public class LineFollowingThreaded {
 
 
         // Start color sensing thread
-        ColorSensingThread colorThread = new ColorSensingThread(colorSensor, leftMotor, rightMotor, baseSpeed, searchSpeed);
+        colorSensingThread colorThread = new ColorSensingThread(colorSensor, leftMotor, rightMotor, baseSpeed, searchSpeed);
         colorThread.start();
 
         // Wait for button press to start the program
