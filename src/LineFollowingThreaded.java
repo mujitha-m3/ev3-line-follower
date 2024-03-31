@@ -80,13 +80,13 @@ class ColorSensingThread extends Thread {
             } else {
                 // Line missing
                 // Curve handling
-                leftMotor.setSpeed(searchSpeed / 1);
+                leftMotor.setSpeed(searchSpeed / 2);
                 rightMotor.setSpeed(baseSpeed);
                 leftMotor.forward();
                 rightMotor.forward();
                 Delay.msDelay(100); // Adjust time as needed
                 leftMotor.setSpeed(baseSpeed);
-                rightMotor.setSpeed(searchSpeed / 1);
+                rightMotor.setSpeed(searchSpeed / 2);
                 leftMotor.forward();
                 rightMotor.forward();
                 Delay.msDelay(200); // Adjust time as needed
