@@ -14,11 +14,12 @@ public class LineFollowingThreaded {
         EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3);
 
 
-        // Set Motor Speeds
-        int basespeed = 300;
-        int searchspeed = baseSpeed / 2; // Reduced speed for searching
-        leftMotor.setspeed(baseSpeed);
-        rightMotor.setspeed(baseSpeed);
+        // Set motor speeds
+        int baseSpeed = 300;
+        int searchSpeed = baseSpeed / 2; // Reduced speed for searching
+        leftMotor.setSpeed(baseSpeed);
+        rightMotor.setSpeed(baseSpeed);
+
 
         // Start color sensing thread
         ColorSensingThread colorThread = new ColorSensingThread(colorSensor, leftMotor, rightMotor, baseSpeed, searchSpeed);
