@@ -3,15 +3,15 @@ import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
-
+import lejos.hardware.port.SensorPort;
 
 public class LineFollowingThreaded {
     public static void main(String[] args) {
         // Initialize motors and color sensor
         Brick brick = BrickFinder.getDefault();
-        EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
-        EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
-        EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3);
+        EV3regulatedmotor leftMotor = new EV3regulatedMotor(MotorPort.A);
+        EV3regulatedMotor rightMotor = new EV3regulatedMotor(MotorPort.B);
+        EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S1);
 
         // Set Motor Speeds
         int baseSpeed = 300;
