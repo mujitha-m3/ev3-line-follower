@@ -15,10 +15,10 @@ public class LineFollowingThreaded {
 
 
         // Set Motor Speeds
-        int baseSpeed = 300;
-        int searchSpeed = baseSpeed / 2; // Reduced speed for searching
-        leftMotor.setSpeed(baseSpeed);
-        rightMotor.setSpeed(baseSpeed);
+        int basespeed = 300;
+        int searchspeed = baseSpeed / 2; // Reduced speed for searching
+        leftMotor.setspeed(baseSpeed);
+        rightMotor.setspeed(baseSpeed);
 
         // Start color sensing thread
         ColorSensingThread colorThread = new ColorSensingThread(colorSensor, leftMotor, rightMotor, baseSpeed, searchSpeed);
