@@ -8,6 +8,9 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.Color;
 import lejos.robotics.SampleProvider;
+import lejos.utility.Delay;
+import lejos.hardware.Sound;
+
 
 
 public class LineFollowing {
@@ -55,16 +58,16 @@ public class LineFollowing {
                     System.out.println("Line detected");
                 } else {
                     // Line missing
-                else if (lineFound) {
+                    if (lineFound) {
                         // Curve handling
                         System.out.println("Line missing, curve handling...");
-                        leftMotor.setSpeed(searchSpeed / 1);
+                        leftMotor.setSpeed(searchSpeed / 2);
                         rightMotor.setSpeed(baseSpeed);
                         leftMotor.forward();
                         rightMotor.forward();
                         Delay.msDelay(100); // Adjust time as needed
                         leftMotor.setSpeed(baseSpeed);
-                        rightMotor.setSpeed(searchSpeed / 1);
+                        rightMotor.setSpeed(searchSpeed / 2);
                         leftMotor.forward();
                         rightMotor.forward();
                         Delay.msDelay(200); // Adjust time as needed
