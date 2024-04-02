@@ -9,6 +9,7 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.Color;
 import lejos.robotics.SampleProvider;
 import lejos.utility.Delay;
+import lejos.hardware.Sound;
 
 public class LineFollowing {
     public static void main(String[] args) {
@@ -118,6 +119,7 @@ public class LineFollowing {
                 if (distance < 0.2) { // Adjust the distance threshold as needed
                     // Obstacle detected, perform action
                     System.out.println("Obstacle detected. Stopping motors.");
+                    Sound.beepSequenceUp(); 
                     leftMotor.stop(true);
                     rightMotor.stop();
                 }
