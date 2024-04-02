@@ -19,8 +19,8 @@ public class LineFollowing {
 
 
         // Set motor speeds
-        Int baseSpeed = 300;
-        int searchSpeed = basespeed / 2; // Reduced speed for searching
+        int baseSpeed = 300;
+        int searchSpeed = baseSpeed / 2; // Reduced speed for searching
         leftMotor.setSpeed(baseSpeed);
         rightMotor.setSpeed(baseSpeed);
 
