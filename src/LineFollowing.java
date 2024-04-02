@@ -11,7 +11,7 @@ public class LineFollowing {
         Brick brick = BrickFinder.getDefault();
         EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
         EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
-        EV3ColorSensor colorsensor = new EV3Colorsensor(SensorPort.S2); // Changed to SensorPort.S3
+        EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3); // Changed to SensorPort.S3
         EV3UltrasonicSensor ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S1); // Ultrasonic sensor on port 1
 
 
