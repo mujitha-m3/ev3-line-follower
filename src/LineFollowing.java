@@ -11,8 +11,6 @@ import lejos.robotics.SampleProvider;
 import lejos.utility.Delay;
 import lejos.hardware.Sound;
 
-
-
 public class LineFollowing {
     public static void main(String[] args) {
         Brick brick = BrickFinder.getDefault();
@@ -20,8 +18,6 @@ public class LineFollowing {
         EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
         EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3); // Changed to SensorPort.S3
         EV3UltrasonicSensor ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S1); // Ultrasonic sensor on port 1
-
-
 
         // Set motor speeds
         int baseSpeed = 300;
@@ -34,7 +30,6 @@ public class LineFollowing {
         float[] sample = new float[colorProvider.sampleSize()];
 
         boolean lineFound = false;
-
 
         // Create obstacle detection thread
         ObstacleDetectionThread obstacleDetectionThread = new ObstacleDetectionThread(leftMotor, rightMotor, ultrasonicSensor);
