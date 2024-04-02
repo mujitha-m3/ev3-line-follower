@@ -30,7 +30,8 @@ public class LineFollowing {
         SampleProvider colorProvider = colorSensor.getColorIDMode();
         float[] sample = new float[colorProvider.sampleSize()];
 
-        boolean lineFound = true;
+        boolean lineFound = false;
+
 
         // Create obstacle detection thread
         ObstacleDetectionThread obstacleDetectionThread = new ObstacleDetectionThread(leftMotor, rightMotor, ultrasonicSensor);
