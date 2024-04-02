@@ -7,10 +7,11 @@ import lejos.hardware.port.MotorPort;
 public class LineFollowing {
     public static void main(String[] args) {
         Brick brick = BrickFinder.getDefault();
-        EV3largeRegulatedMotor leftMotor = new EV3largeRegulatedMotor(MotorPort.B);
-        EV3largeRegulatedMotor rightMotor = new EV3largeRegulatedMotor(MotorPort.C);
+        EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
+        EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
         EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3); // Changed to SensorPort.S3
         EV3UltrasonicSensor ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S1); // Ultrasonic sensor on port 1
+
 
         // Set motor speeds
         int baseSpeed = 300;
