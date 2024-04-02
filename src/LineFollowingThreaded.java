@@ -104,4 +104,6 @@ class ColorSensingThread extends Thread {
     public void terminate() {
         running = false;
     }
+    
+    // Obstacles sound method here
 }
