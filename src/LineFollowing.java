@@ -47,11 +47,11 @@ public class LineFollowing {
                 colorProvider.fetchSample(sample, 0);
                 int colorId = (int) sample[0];
 
-                if (colorId = 7) {
+                if (colorId == 7) {
                     // Color ID 7: Line detected
                     leftMotor.forward();
                     rightMotor.forward();
-                    lineFound = false;
+                    lineFound = true;
                     System.out.println("Line detected");
                 } else {
                     // Line missing
