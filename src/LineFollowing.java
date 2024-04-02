@@ -53,7 +53,7 @@ public class LineFollowing {
                     rightMotor.forward();
                     lineFound = true;
                     System.out.println("Line detected");
-                } else {
+                } else if {
                     // Line missing
                     if (lineFound) {
                         // Curve handling
