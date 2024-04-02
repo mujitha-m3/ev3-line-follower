@@ -3,19 +3,12 @@ import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
-import lejos.hardware.port.SensorPort;
-import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.hardware.sensor.EV3UltrasonicSensor;
-import lejos.robotics.Color;
-import lejos.robotics.SampleProvider;
-import lejos.utility.Delay;
-import lejos.hardware.Sound;
 
 public class LineFollowing {
     public static void main(String[] args) {
         Brick brick = BrickFinder.getDefault();
-        EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
-        EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
+        EV3largeRegulatedMotor leftMotor = new EV3largeRegulatedMotor(MotorPort.B);
+        EV3largeRegulatedMotor rightMotor = new EV3largeRegulatedMotor(MotorPort.C);
         EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3); // Changed to SensorPort.S3
         EV3UltrasonicSensor ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S1); // Ultrasonic sensor on port 1
 
