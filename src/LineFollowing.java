@@ -41,7 +41,7 @@ public class LineFollowing {
         System.out.println("Press any button to start...");
         Button.waitForAnyPress();
 
-        try {
+        
             while (!Button.ESCAPE.isDown()) {
                 // Read color from the color sensor
                 colorProvider.fetchSample(sample, 0);
@@ -77,7 +77,7 @@ public class LineFollowing {
                         // Continue searching for line
                         leftMotor.backward();
                         rightMotor.forward();
-                    }
+                    
                 }
 
                 // Add a small delay to control loop execution frequency
