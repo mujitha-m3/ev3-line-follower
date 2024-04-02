@@ -6,6 +6,8 @@ import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
+import lejos.robotics.Color;
+import lejos.robotics.SampleProvider;
 
 
 public class LineFollowing {
@@ -28,7 +30,7 @@ public class LineFollowing {
         SampleProvider colorProvider = colorSensor.getColorIDMode();
         float[] sample = new float[colorProvider.sampleSize()];
 
-        boolean lineFound = false;
+        boolean lineFound = true;
 
         // Create obstacle detection thread
         ObstacleDetectionThread obstacleDetectionThread = new ObstacleDetectionThread(leftMotor, rightMotor, ultrasonicSensor);
