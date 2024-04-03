@@ -9,6 +9,7 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.Color;
 import lejos.robotics.SampleProvider;
 import lejos.utility.Delay;
+import lejos.hardware.Sound;
 
 public class LineFollowing {
     public static void main(String[] args) {
@@ -19,7 +20,7 @@ public class LineFollowing {
         EV3UltrasonicSensor ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S1); // Ultrasonic sensor on port 1
 
         // Set motor speeds
-        int baseSpeed = 300;
+        int baseSpeed = 320;
         int searchSpeed = baseSpeed / 2; // Reduced speed for searching
         leftMotor.setSpeed(baseSpeed);
         rightMotor.setSpeed(baseSpeed);
@@ -55,7 +56,7 @@ public class LineFollowing {
                     if (lineFound) {
                         // Curve handling
                         System.out.println("Line missing, curve handling...");
-                        leftMotor.setSpeed(searchSpeed / 2);
+                        leftMotor.setSpeed((searchSpeed /50));
                         rightMotor.setSpeed(baseSpeed);
                         leftMotor.forward();
                         rightMotor.forward();
@@ -118,6 +119,7 @@ public class LineFollowing {
                 if (distance < 0.2) { // Adjust the distance threshold as needed
                     // Obstacle detected, perform action
                     System.out.println("Obstacle detected. Stopping motors.");
+                    //Sound.beepSequenceUp(); 
                     leftMotor.stop(true);
                     rightMotor.stop();
                 }
