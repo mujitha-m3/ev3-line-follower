@@ -79,14 +79,12 @@ public class LineFollowing {
     }
 
     static class ObstacleDetectionThread extends Thread {
-        private EV3LargeRegulatedMotor leftMotor;
-        private EV3LargeRegulatedMotor rightMotor;
         private EV3UltrasonicSensor ultrasonicSensor;
+        private boolean obstacleDetected;
 
-        public ObstacleDetectionThread(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, EV3UltrasonicSensor ultrasonicSensor) {
-            this.leftMotor = leftMotor;
-            this.rightMotor = rightMotor;
+        public ObstacleDetectionThread(EV3UltrasonicSensor ultrasonicSensor) {
             this.ultrasonicSensor = ultrasonicSensor;
+            this.obstacleDetected = false;
         }
 
         @Override
@@ -95,25 +93,92 @@ public class LineFollowing {
             float[] sample = new float[distanceProvider.sampleSize()];
 
             while (!Button.ESCAPE.isDown()) {
-                // Read distance from the ultrasonic sensor
+                // Read distance using the ultrasonic sensor
                 distanceProvider.fetchSample(sample, 0);
-                float distance = sample[0];
+                int distance = (int) (sample[0] * 100); // Convert to centimeters
 
-                // Implement obstacle detection logic here
-                // For simplicity, let's assume obstacle detection involves checking the distance
-                // If an obstacle is detected, stop the motors
-
-                // Simulated obstacle detection logic (you need to replace this with actual obstacle detection)
-                if (distance < 0.2) { // Adjust the distance threshold as needed
-                    // Obstacle detected, perform action
-                    System.out.println("Obstacle detected. Stopping motors.");
-                    //Sound.beepSequenceUp(); 
-                    leftMotor.stop(true);
-                    rightMotor.stop();
+                if (distance < 20) {
+                    obstacleDetected = true;
+                } else {
+                    obstacleDetected = false;
                 }
 
-                // Add a small delay to control loop execution frequency
+            
                 Delay.msDelay(50);
+            }
+        }
+
+        public boolean isObstacleDetected() {
+            return obstacleDetected;
+        }
+    }
+
+    static class LineFollowingThread extends Thread {
+        private EV3LargeRegulatedMotor leftMotor;
+        private EV3LargeRegulatedMotor rightMotor;
+        private ColorDetectionThread colorDetectionThread;
+        private ObstacleDetectionThread obstacleDetectionThread;
+        private static final int baseSpeed = 320;
+        private static final int searchSpeed = baseSpeed / 2;
+
+        public LineFollowingThread(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, ColorDetectionThread colorDetectionThread, ObstacleDetectionThread obstacleDetectionThread) {
+            this.leftMotor = leftMotor;
+            this.rightMotor = rightMotor;
+            this.colorDetectionThread = colorDetectionThread;
+            this.obstacleDetectionThread = obstacleDetectionThread;
+            // Set motor speeds
+            leftMotor.setSpeed(baseSpeed);
+            rightMotor.setSpeed(baseSpeed);
+        }
+
+        @Override
+        public void run() {
+            boolean lineFound = false;
+            while (!Button.ESCAPE.isDown()) {
+                int colorId = colorDetectionThread.getLineColorId();
+                boolean obstacleDetected = obstacleDetectionThread.isObstacleDetected();
+
+                if (obstacleDetected && !lineFound) {
+                    // Ignore obstacle if line is not found yet
+                    continue;
+                } else {
+                	 System.out.println("Obstacle found...");
+                }
+
+                if (colorId == lineColorId) {
+                    // Black line detected, continue moving forward
+                    leftMotor.forward();
+                    rightMotor.forward();
+                    lineFound = true;
+                    System.out.println("Line detected");
+                } else {
+                    if (lineFound) {
+                        // Curve handling
+                        System.out.println("Line missing, curve handling...");
+                        leftMotor.setSpeed((searchSpeed / 50));
+                        rightMotor.setSpeed(baseSpeed);
+                        leftMotor.forward();
+                        rightMotor.forward();
+                        Delay.msDelay(100); 
+                        leftMotor.setSpeed(baseSpeed);
+                        rightMotor.setSpeed(searchSpeed / 2);
+                        leftMotor.forward();
+                        rightMotor.forward();
+                        Delay.msDelay(200); 
+                        System.out.println("Curve handling complete");
+                        // Continue searching for line
+                        leftMotor.backward();
+                        rightMotor.forward();
+                        lineFound = false;
+                    } else {
+                       
+                        leftMotor.backward();
+                        rightMotor.forward();
+                    }
+                }
+
+               
+                Delay.msDelay(10);
             }
         }
     }
