@@ -6,87 +6,75 @@ import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
-import lejos.robotics.Color;
 import lejos.robotics.SampleProvider;
 import lejos.utility.Delay;
-import lejos.hardware.Sound;
 
 public class LineFollowing {
+    // Define the color ID of the line
+    private static final int lineColorId = 7;
+
     public static void main(String[] args) {
         Brick brick = BrickFinder.getDefault();
         EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
         EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
-        EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3); // Changed to SensorPort.S3
+        EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3); 
         EV3UltrasonicSensor ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S1); // Ultrasonic sensor on port 1
 
-        // Set motor speeds
+        
         int baseSpeed = 320;
-        int searchSpeed = baseSpeed / 2; // Reduced speed for searching
         leftMotor.setSpeed(baseSpeed);
         rightMotor.setSpeed(baseSpeed);
 
-        // Get the color ID mode of the color sensor
-        SampleProvider colorProvider = colorSensor.getColorIDMode();
-        float[] sample = new float[colorProvider.sampleSize()];
-
-        boolean lineFound = false;
+       
+        ColorDetectionThread colorDetectionThread = new ColorDetectionThread(colorSensor);
+        colorDetectionThread.start();
 
         // Create obstacle detection thread
-        ObstacleDetectionThread obstacleDetectionThread = new ObstacleDetectionThread(leftMotor, rightMotor, ultrasonicSensor);
+        ObstacleDetectionThread obstacleDetectionThread = new ObstacleDetectionThread(ultrasonicSensor);
         obstacleDetectionThread.start();
+
+        // Create line following thread
+        LineFollowingThread lineFollowingThread = new LineFollowingThread(leftMotor, rightMotor, colorDetectionThread, obstacleDetectionThread);
+        lineFollowingThread.start();
 
         // Wait for button press to start the program.
         System.out.println("Press any button to start...");
         Button.waitForAnyPress();
 
-        try {
+        while (!Button.ESCAPE.isDown()) {
+            // Add a small delay to control loop execution frequency
+            Delay.msDelay(10);
+        }
+
+        // Stop the motors and close the sensors when the program ends
+        leftMotor.stop(true);
+        rightMotor.stop();
+        colorSensor.close();
+        ultrasonicSensor.close();
+    }
+
+    static class ColorDetectionThread extends Thread {
+        private EV3ColorSensor colorSensor;
+        private int lineColorId;
+
+        public ColorDetectionThread(EV3ColorSensor colorSensor) {
+            this.colorSensor = colorSensor;
+        }
+
+        @Override
+        public void run() {
+            SampleProvider colorProvider = colorSensor.getColorIDMode();
+            float[] sample = new float[colorProvider.sampleSize()];
+
             while (!Button.ESCAPE.isDown()) {
-                // Read color from the color sensor
                 colorProvider.fetchSample(sample, 0);
-                int colorId = (int) sample[0];
-
-                if (colorId == 7) {
-                    // Color ID 7: Line detected
-                    leftMotor.forward();
-                    rightMotor.forward();
-                    lineFound = true;
-                    System.out.println("Line detected");
-                } else {
-                    // Line missing
-                    if (lineFound) {
-                        // Curve handling
-                        System.out.println("Line missing, curve handling...");
-                        leftMotor.setSpeed((searchSpeed /50));
-                        rightMotor.setSpeed(baseSpeed);
-                        leftMotor.forward();
-                        rightMotor.forward();
-                        Delay.msDelay(100); // Adjust time as needed
-                        leftMotor.setSpeed(baseSpeed);
-                        rightMotor.setSpeed(searchSpeed / 2);
-                        leftMotor.forward();
-                        rightMotor.forward();
-                        Delay.msDelay(200); // Adjust time as needed
-                        System.out.println("Curve handling complete");
-                        // Continue searching for line
-                        leftMotor.backward();
-                        rightMotor.forward();
-                        lineFound = false;
-                    } else {
-                        // Continue searching for line
-                        leftMotor.backward();
-                        rightMotor.forward();
-                    }
-                }
-
-                // Add a small delay to control loop execution frequency
-                Delay.msDelay(10);
+                lineColorId = (int) sample[0];
             }
-        } finally {
-            // Stop the motors and close the color sensor and ultrasonic sensor when the program ends
-            leftMotor.stop(true);
-            rightMotor.stop();
             colorSensor.close();
-            ultrasonicSensor.close();
+        }
+
+        public int getLineColorId() {
+            return lineColorId;
         }
     }
 
