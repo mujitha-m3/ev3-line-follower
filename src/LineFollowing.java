@@ -11,21 +11,21 @@ import lejos.utility.Delay;
 
 public class LineFollowing {
     // Define the color ID of the line
-    private static final int lineColorId = 7;
+    private static final int LINE_COLOR_ID = 7;
 
     public static void main(String[] args) {
         Brick brick = BrickFinder.getDefault();
         EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
         EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
         EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3); 
-        EV3UltrasonicSensor ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S1); // Ultrasonic sensor on port 1
+        EV3UltrasonicSensor ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S1); 
 
-        
+        // Set motor speeds
         int baseSpeed = 320;
         leftMotor.setSpeed(baseSpeed);
         rightMotor.setSpeed(baseSpeed);
 
-       
+        // Create color detection thread
         ColorDetectionThread colorDetectionThread = new ColorDetectionThread(colorSensor);
         colorDetectionThread.start();
 
@@ -93,17 +93,17 @@ public class LineFollowing {
             float[] sample = new float[distanceProvider.sampleSize()];
 
             while (!Button.ESCAPE.isDown()) {
-                // Read distance using the ultrasonic sensor
+                // Read distance from the ultrasonic sensor
                 distanceProvider.fetchSample(sample, 0);
                 int distance = (int) (sample[0] * 100); // Convert to centimeters
 
-                if (distance < 20) {
+                if (distance < 10) {
                     obstacleDetected = true;
                 } else {
                     obstacleDetected = false;
                 }
 
-            
+                // Add a small delay to control loop execution frequency
                 Delay.msDelay(50);
             }
         }
@@ -118,7 +118,7 @@ public class LineFollowing {
         private EV3LargeRegulatedMotor rightMotor;
         private ColorDetectionThread colorDetectionThread;
         private ObstacleDetectionThread obstacleDetectionThread;
-        private static final int baseSpeed = 320;
+        private static final int baseSpeed = 200;
         private static final int searchSpeed = baseSpeed / 2;
 
         public LineFollowingThread(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, ColorDetectionThread colorDetectionThread, ObstacleDetectionThread obstacleDetectionThread) {
@@ -139,13 +139,38 @@ public class LineFollowing {
                 boolean obstacleDetected = obstacleDetectionThread.isObstacleDetected();
 
                 if (obstacleDetected && !lineFound) {
-                    // Ignore obstacle if line is not found yet
-                    continue;
+                	System.out.println("Obstacle else...");
+                	System.out.println("right turn...");
+                    
+                    leftMotor.forward();
+                    rightMotor.stop();
+                    leftMotor.stop();
+                    System.out.println("right turn");
+                    
+                    leftMotor.forward();
+                    rightMotor.forward();
+                    Delay.msDelay(100);
+                    rightMotor.stop();
+                    leftMotor.stop();
+                    System.out.println("forward");
+                    
+                    
+                    rightMotor.forward();
+                    leftMotor.stop();
+                    rightMotor.stop();
+                    System.out.println("left turn");
+                    
+                    leftMotor.forward();
+                    rightMotor.forward();
+                    Delay.msDelay(100);
+                    
+                    
+                    System.out.println("stop...");
                 } else {
                 	 System.out.println("Obstacle found...");
                 }
 
-                if (colorId == lineColorId) {
+                if (colorId == LINE_COLOR_ID) {
                     // Black line detected, continue moving forward
                     leftMotor.forward();
                     rightMotor.forward();
@@ -155,7 +180,7 @@ public class LineFollowing {
                     if (lineFound) {
                         // Curve handling
                         System.out.println("Line missing, curve handling...");
-                        leftMotor.setSpeed((searchSpeed / 50));
+                        leftMotor.setSpeed((searchSpeed / 2));
                         rightMotor.setSpeed(baseSpeed);
                         leftMotor.forward();
                         rightMotor.forward();
@@ -170,14 +195,14 @@ public class LineFollowing {
                         leftMotor.backward();
                         rightMotor.forward();
                         lineFound = false;
-                    } else {
-                       
+                    } else  {
+                    	 // Continue searching for line
                         leftMotor.backward();
                         rightMotor.forward();
                     }
                 }
 
-               
+                // Add a small delay to control loop execution frequency
                 Delay.msDelay(10);
             }
         }
