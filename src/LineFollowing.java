@@ -31,19 +31,18 @@ public class LineFollowing {
         System.out.println("Press any button to start...");
         Button.waitForAnyPress();
 
-        while (!Button.ESCAPE.isDown()) {
-            
-            Delay.msDelay(10);
+        // Main loop
+        while (true) {
+            if (Button.ESCAPE.isDown()) {
+                // Stop the motors if ESCAPE button is pressed
+                leftMotor.stop(true);
+                rightMotor.stop();
+                break; // Exit the loop
+            }
+            Delay.msDelay(10); // Delay to avoid busy waiting
         }
 
-        // Stop the motors and close the sensors when the program ends
-        leftMotor.stop(true);
-        rightMotor.stop();
+        // Close the sensors when the program ends
         ultrasonicSensor.close();
-    }
-
-    // Method to notify obstacle detection
-    public static void notifyObstacleDetected() {
-        System.out.println("Obstacle detected notification received...");
     }
 }
