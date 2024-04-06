@@ -1,5 +1,4 @@
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
-import lejos.utility.Delay;
 
 public class LineFollowingThread extends Thread {
     private EV3LargeRegulatedMotor leftMotor;
@@ -23,17 +22,18 @@ public class LineFollowingThread extends Thread {
     public void run() {
         boolean lineFound = false;
         while (!Thread.currentThread().isInterrupted()) {
-            int colorId = colorDetectionThread.getLineColorId();
+            boolean lineDetected = colorDetectionThread.isLineDetected();
             boolean obstacleDetected = obstacleDetectionThread.isObstacleDetected();
 
             if (obstacleDetected && !lineFound) {
                 System.out.println("Obstacle found...");
-                // Code for avoiding the obstacle
+                leftMotor.stop(true); // Stop left motor
+                rightMotor.stop(); // Stop right motor
             } else {
                 System.out.println("Obstacle not found...");
             }
 
-            // Add a small delay to control loop execution frequency
+            
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {

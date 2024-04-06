@@ -32,7 +32,7 @@ public class ColorDetectionThread extends Thread {
                     setLineDetected(false);
                 }
 
-                // Add a small delay to control loop execution frequency
+                
                 Delay.msDelay(10);
             }
         } finally {

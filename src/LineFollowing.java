@@ -2,7 +2,6 @@ import lejos.hardware.Button;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
-import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.utility.Delay;
 
@@ -10,11 +9,10 @@ public class LineFollowing {
     public static void main(String[] args) {
         EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
         EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
-        EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3);
         EV3UltrasonicSensor ultrasonicSensor = new EV3UltrasonicSensor(SensorPort.S1);
 
         // Create color detection thread
-        ColorDetectionThread colorDetectionThread = new ColorDetectionThread(colorSensor);
+        ColorDetectionThread colorDetectionThread = new ColorDetectionThread();
         colorDetectionThread.start();
 
         // Create obstacle detection thread
@@ -34,14 +32,13 @@ public class LineFollowing {
         Button.waitForAnyPress();
 
         while (!Button.ESCAPE.isDown()) {
-            // Add a small delay to control loop execution frequency
+            
             Delay.msDelay(10);
         }
 
         // Stop the motors and close the sensors when the program ends
         leftMotor.stop(true);
         rightMotor.stop();
-        colorSensor.close();
         ultrasonicSensor.close();
     }
 
