@@ -12,13 +12,11 @@ public class ColorDetectionThread extends Thread {
     private final float MIN_INTENSITY = 20; // Minimum intensity threshold
     private final float MAX_INTENSITY = 50; // Maximum intensity threshold
 
-    
     public ColorDetectionThread() {
         colorSensor = new EV3ColorSensor(SensorPort.S3);
         intensityProvider = colorSensor.getRedMode();
         sample = new float[intensityProvider.sampleSize()];
     }
-
     @Override
     public void run() {
         try {
