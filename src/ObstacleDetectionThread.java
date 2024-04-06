@@ -32,7 +32,7 @@ public class ObstacleDetectionThread extends Thread {
                 setObstacleDetected(false);
             }
 
-            // Add a small delay to control loop execution frequency
+            
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
