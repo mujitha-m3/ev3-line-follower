@@ -1,19 +1,17 @@
-import lejos.hardware.motor.EV3LargeRegulatedMotor;
-import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.Sound;
+import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.SampleProvider;
 
 public class ObstacleDetectionThread extends Thread {
     private EV3UltrasonicSensor ultrasonicSensor;
     private boolean obstacleDetected;
-    private EV3LargeRegulatedMotor leftMotor;
-    private EV3LargeRegulatedMotor rightMotor;
+    private int obstacleCount; // Variable to count obstacles
+    private static final int OBSTACLE_THRESHOLD = 15; // Threshold distance for obstacle detection
 
-    public ObstacleDetectionThread(EV3UltrasonicSensor ultrasonicSensor, EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor) {
+    public ObstacleDetectionThread(EV3UltrasonicSensor ultrasonicSensor) {
         this.ultrasonicSensor = ultrasonicSensor;
         this.obstacleDetected = false;
-        this.leftMotor = leftMotor;
-        this.rightMotor = rightMotor;
+        this.obstacleCount = 0; // Initialize obstacle count
     }
 
     @Override
@@ -26,15 +24,17 @@ public class ObstacleDetectionThread extends Thread {
             distanceProvider.fetchSample(sample, 0);
             int distance = (int) (sample[0] * 100); // Convert to centimeters
 
-            if (distance < 15) {
+            if (distance < OBSTACLE_THRESHOLD) {
                 setObstacleDetected(true);
+                System.out.println("Obstacle detected...");
+                obstacleCount++; 
                 Sound.beep();
                 Sound.beep();
             } else {
                 setObstacleDetected(false);
             }
 
-            
+            // Add a small delay to control loop execution frequency
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
@@ -49,5 +49,9 @@ public class ObstacleDetectionThread extends Thread {
 
     private synchronized void setObstacleDetected(boolean obstacleDetected) {
         this.obstacleDetected = obstacleDetected;
+    }
+    
+    public synchronized int getObstacleCount() {
+        return obstacleCount; 
     }
 }

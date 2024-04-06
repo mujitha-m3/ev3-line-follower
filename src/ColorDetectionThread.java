@@ -1,3 +1,4 @@
+import lejos.hardware.Sound;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
@@ -9,11 +10,11 @@ public class ColorDetectionThread extends Thread {
     private float[] sample;
     private boolean lineDetected;
 
-    private final float MIN_INTENSITY = 20; // Minimum intensity threshold
-    private final float MAX_INTENSITY = 50; // Maximum intensity threshold
+    private final float MIN_INTENSITY = 30; // Minimum intensity threshold
+    private final float MAX_INTENSITY = 40; // Maximum intensity threshold
 
-    public ColorDetectionThread() {
-        colorSensor = new EV3ColorSensor(SensorPort.S3);
+    public ColorDetectionThread(EV3ColorSensor colorSensor) {
+        this.colorSensor = colorSensor;
         intensityProvider = colorSensor.getRedMode();
         sample = new float[intensityProvider.sampleSize()];
     }
@@ -47,5 +48,9 @@ public class ColorDetectionThread extends Thread {
 
     private synchronized void setLineDetected(boolean lineDetected) {
         this.lineDetected = lineDetected;
+    }
+    
+    public synchronized float getIntensity() {
+        return sample[0] * 100; 
     }
 }
