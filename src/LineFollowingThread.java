@@ -4,15 +4,13 @@ public class LineFollowingThread extends Thread {
     private EV3LargeRegulatedMotor leftMotor;
     private EV3LargeRegulatedMotor rightMotor;
     private ColorDetectionThread colorDetectionThread;
-    private ObstacleDetectionThread obstacleDetectionThread;
     private static final int BASE_SPEED = 200;
     private static final int SEARCH_SPEED = BASE_SPEED / 2;
 
-    public LineFollowingThread(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, ColorDetectionThread colorDetectionThread, ObstacleDetectionThread obstacleDetectionThread) {
+    public LineFollowingThread(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, ColorDetectionThread colorDetectionThread) {
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.colorDetectionThread = colorDetectionThread;
-        this.obstacleDetectionThread = obstacleDetectionThread;
         // Set motor speeds
         leftMotor.setSpeed(BASE_SPEED);
         rightMotor.setSpeed(BASE_SPEED);
@@ -23,22 +21,39 @@ public class LineFollowingThread extends Thread {
         boolean lineFound = false;
         while (!Thread.currentThread().isInterrupted()) {
             boolean lineDetected = colorDetectionThread.isLineDetected();
-            boolean obstacleDetected = obstacleDetectionThread.isObstacleDetected();
 
-            if (obstacleDetected && !lineFound) {
-                System.out.println("Obstacle found...");
-                leftMotor.stop(true); // Stop left motor
-                rightMotor.stop(); // Stop right motor
+            if (lineDetected) {
+                // Move forward if line is detected
+                leftMotor.forward();
+                rightMotor.forward();
+                lineFound = true;
             } else {
-                System.out.println("Obstacle not found...");
+                // No line detected
+                if (lineFound) {
+                    // Curve handling
+                    System.out.println("Curve handling...");
+                    // Reduce speed of one motor to turn
+                    leftMotor.setSpeed(SEARCH_SPEED);
+                    rightMotor.setSpeed(BASE_SPEED);
+                    // Turn right (for example)
+                    leftMotor.forward();
+                    rightMotor.forward();
+                    // Add delay for turning (adjust as needed)
+                    Delay.msDelay(500);
+                    // Restore speeds for straight line following
+                    leftMotor.setSpeed(BASE_SPEED);
+                    rightMotor.setSpeed(BASE_SPEED);
+                    System.out.println("Curve handling complete");
+                    lineFound = false; // Reset line found flag
+                } else {
+                    // Continue searching for line
+                    leftMotor.forward();
+                    rightMotor.forward();
+                }
             }
 
-            
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+            // Add a small delay to control loop execution frequency
+            Delay.msDelay(10);
         }
     }
 }
