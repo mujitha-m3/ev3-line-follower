@@ -1,5 +1,6 @@
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
+import lejos.hardware.Sound;
 import lejos.robotics.SampleProvider;
 
 public class ObstacleDetectionThread extends Thread {
@@ -25,9 +26,10 @@ public class ObstacleDetectionThread extends Thread {
             distanceProvider.fetchSample(sample, 0);
             int distance = (int) (sample[0] * 100); // Convert to centimeters
 
-            if (distance < 10) {
+            if (distance < 15) {
                 setObstacleDetected(true);
-                LineFollowing.notifyObstacleDetected(); // Notify LineFollowing class about obstacle
+                Sound.beep();
+                Sound.beep();
             } else {
                 setObstacleDetected(false);
             }
