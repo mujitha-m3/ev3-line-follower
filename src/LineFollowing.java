@@ -1,4 +1,3 @@
-import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
@@ -19,12 +18,16 @@ public class LineFollowing {
         colorDetectionThread.start();
 
         // Create obstacle detection thread
-        ObstacleDetectionThread obstacleDetectionThread = new ObstacleDetectionThread(ultrasonicSensor);
+        ObstacleDetectionThread obstacleDetectionThread = new ObstacleDetectionThread(ultrasonicSensor, leftMotor, rightMotor);
         obstacleDetectionThread.start();
 
         // Create line following thread
         LineFollowingThread lineFollowingThread = new LineFollowingThread(leftMotor, rightMotor, colorDetectionThread, obstacleDetectionThread);
         lineFollowingThread.start();
+
+        // Create time tracker thread
+        LineFollowingTimeTracker timeTrackerThread = new LineFollowingTimeTracker();
+        timeTrackerThread.start();
 
         // Wait for button press to start the program.
         System.out.println("Press any button to start...");
@@ -40,5 +43,10 @@ public class LineFollowing {
         rightMotor.stop();
         colorSensor.close();
         ultrasonicSensor.close();
+    }
+
+    // Method to notify obstacle detection
+    public static void notifyObstacleDetected() {
+        System.out.println("Obstacle detected notification received...");
     }
 }
