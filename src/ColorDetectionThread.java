@@ -17,6 +17,7 @@ public class ColorDetectionThread extends Thread {
         intensityProvider = colorSensor.getRedMode();
         sample = new float[intensityProvider.sampleSize()];
     }
+
     @Override
     public void run() {
         try {
@@ -27,12 +28,11 @@ public class ColorDetectionThread extends Thread {
 
                 // Update line detection status
                 if (intensity >= MIN_INTENSITY && intensity <= MAX_INTENSITY) {
-                    setLineDetected(true);
+                    setLineDetected(true); // Call setLineDetected on the current instance
                 } else {
-                    setLineDetected(false);
+                    setLineDetected(false); // Call setLineDetected on the current instance
                 }
 
-                
                 Delay.msDelay(10);
             }
         } finally {
@@ -41,11 +41,11 @@ public class ColorDetectionThread extends Thread {
         }
     }
 
-    public boolean isLineDetected() {
+    public synchronized boolean isLineDetected() {
         return lineDetected;
     }
 
-    public void setLineDetected(boolean lineDetected) {
+    private synchronized void setLineDetected(boolean lineDetected) {
         this.lineDetected = lineDetected;
     }
 }
