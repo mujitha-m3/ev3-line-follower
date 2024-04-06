@@ -6,14 +6,14 @@ public class LineFollowingThread extends Thread {
     private ColorDetectionThread colorDetectionThread;
     private ObstacleDetectionThread obstacleDetectionThread;
     private boolean lineFound;
+  
     private static final int BASE_SPEED = 200;
     private static final int SEARCH_SPEED = BASE_SPEED / 2;
-
-    public LineFollowingThread(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, ColorDetectionThread colorDetectionThread, ObstacleDetectionThread obstacleDetectionThread) {
+  
+    public LineFollowingThread(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, ColorDetectionThread colorDetectionThread) {
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.colorDetectionThread = colorDetectionThread;
-        this.obstacleDetectionThread = obstacleDetectionThread;
         // Set motor speeds
         leftMotor.setSpeed(BASE_SPEED);
         rightMotor.setSpeed(BASE_SPEED);
@@ -24,7 +24,6 @@ public class LineFollowingThread extends Thread {
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             boolean lineDetected = colorDetectionThread.isLineDetected();
-            boolean obstacleDetected = obstacleDetectionThread.isObstacleDetected();
 
             if (lineDetected) {
                 // Move forward if line is detected
@@ -39,10 +38,15 @@ public class LineFollowingThread extends Thread {
                     // Reduce speed of one motor to turn
                     leftMotor.setSpeed(SEARCH_SPEED);
                     rightMotor.setSpeed(BASE_SPEED);
+
                     // Turn right
                     leftMotor.forward();
                     rightMotor.forward();
-                    // delay for turning 
+                    // delay for turnin
+                    // Turn right
+                    leftMotor.forward();
+                    rightMotor.forward();
+
                     Delay.msDelay(500);
                     // Restore speeds for straight line following
                     leftMotor.setSpeed(BASE_SPEED);
@@ -55,6 +59,7 @@ public class LineFollowingThread extends Thread {
                     rightMotor.forward();
                 }
             }
+
 
             if (obstacleDetected) {
                 // Obstacle detected, stop the motors
