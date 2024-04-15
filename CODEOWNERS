@@ -1,0 +1,9 @@
+# Assigning owners for specific files
+
+/src/ColorDetectionThread.java   @AsithaSandaru
+/src/LineFollowingThread.java   @kcdissanayaka
+/src/LineFollowingTimeTracker.java   @mujitha-m3
+/src/ObstacleDetectionThread.java   @mujitha-m3
+
+# All users are code owners for the README file
+README.md   @all
